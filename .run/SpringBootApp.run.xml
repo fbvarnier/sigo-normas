@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="SpringBootApp" type="Application" factoryName="Application">
+    <envs>
+      <env name="GOOGLE_APPLICATION_CREDENTIALS" value="C:\Users\55459\Downloads\direct-glider.json" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="br.com.indtex.sigo.normas.SigoNormasApplication" />
+    <module name="sigo-normas" />
+    <option name="PROGRAM_PARAMETERS" value="--spring.profiles.active=dev" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

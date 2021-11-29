@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: sigo-normas
+  name: sigo-normas-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: sigo-normas
+  template:
+    metadata:
+      labels:
+        run: sigo-normas
+    spec:
+      containers:
+      - image: gcr.io/direct-glider-327313/sigo-normas:latest
+        name: sigo-normas
+        ports:
+        - containerPort: 8080

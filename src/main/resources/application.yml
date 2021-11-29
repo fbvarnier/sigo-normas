@@ -1,0 +1,49 @@
+server:
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-response-size: 1024
+  http2:
+    enabled: true
+
+springdoc:
+  version: '@springdoc.version@'
+  api-docs:
+    groups:
+      enabled: true
+  swagger-ui:
+    display-request-duration: true
+    groups-order: DESC
+    operationsSorter: method
+    disable-swagger-default-url: true
+    use-root-path: true
+
+spring:
+  application:
+    name: sigo-normas
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://34.151.243.85/normas
+    username: normas
+    password: fhAOFDSSJMd09sA8
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 20
+      pool-name: normasPool
+      idle-timeout: 9000
+      isolate-internal-queries: true
+      connection-test-query: SELECT 1
+      connection-timeout: 18000
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+        show_sql: false
+        format_sql: true
+  servlet.multipart:
+    max-file-size: 5MB
+    max-request-size: 128KB
+
+sigo:
+  projectId: direct-glider-327313
+  bucketName: sigo-docs

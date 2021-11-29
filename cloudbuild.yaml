@@ -1,0 +1,47 @@
+steps:
+- name: maven:3.8.2-openjdk-16
+  id: pack
+  waitFor:
+  - test
+  entrypoint: mvn
+  args: ['package', "-Dmaven.test.skip=true"]
+
+- name: 'gcr.io/cloud-builders/docker'
+  id: pull-image 
+  entrypoint: 'bash'
+  args: [
+   '-c', 
+   'docker pull gcr.io/$PROJECT_ID/sigo-normas:latest || exit 0'
+  ]
+  
+- name: gcr.io/cloud-builders/docker
+  id: build-image
+  waitFor:
+  - pack
+  - pull-image
+  args: ["build", "-t", "gcr.io/$PROJECT_ID/sigo-normas:$COMMIT_SHA", "-t", "gcr.io/$PROJECT_ID/sigo-normas:latest","--build-arg=JAR_FILE=target/sigo-normas.jar", "."]
+
+- name: 'gcr.io/cloud-builders/kubectl'
+  id: apply-config
+  waitFor:
+  - build-image
+  args: ['apply', '-f', 'k8s/']
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=southamerica-east1-a'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=kube-cluster-tcc'
+  
+- name: 'gcr.io/cloud-builders/kubectl'
+  id: deploy-kube
+  waitFor:
+  - apply-config
+  args: ['set', 'image', 'deployment.apps/sigo-normas-deployment', 'sigo-normas=gcr.io/$PROJECT_ID/sigo-normas:$COMMIT_SHA']
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=southamerica-east1-a'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=kube-cluster-tcc'
+
+images: [
+   'gcr.io/$PROJECT_ID/sigo-normas:$COMMIT_SHA',
+   'gcr.io/$PROJECT_ID/sigo-normas:latest'
+  ]
+options:
+ logging: CLOUD_LOGGING_ONLY
